@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.phisuite.schema";
+option java_outer_classname = "CommonProto";
+
+package schema;
+
+enum Status {
+    UNACTIVATED = 0;
+    ACTIVATED = 1;
+    DEACTIVATED = 2;
+}
+
+message Options {
+    string name = 1;
+    string version = 2;
+    Status status = 3;
+}
+
+message Field {
+    string name = 1;
+
+    enum Type {
+        STRING = 0;
+        NUMBER = 1;
+        BOOLEAN = 2;
+        EMAIL = 3;
+        DATE = 4;
+        TIME = 5;
+        COLOR = 6;
+    }
+    Type type = 2;
+}
+
+message File {
+    string name = 1;
+
+    enum Type {
+        SINGLE = 0;
+        LIST = 1;
+    }
+    Type type = 2;
+}
