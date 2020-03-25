@@ -6,21 +6,51 @@ option java_outer_classname = "EntityProto";
 
 package schema;
 
+import "google/api/annotations.proto";
 import "common.proto";
 
 message Entity {
     string name = 1;
     string version = 2;
     Status status = 3;
-    repeated Field data = 4;
-    repeated Field options = 5;
+
+    repeated Field data = 10;
 }
 
-service EntityAPI {
-    rpc List(Options) returns (stream Entity);
-    rpc Get(Options) returns (Entity);
-    rpc Create(Entity) returns (Entity);
-    rpc Update(Entity) returns (Entity);
-    rpc Activate(Entity) returns (Entity);
-    rpc Deactivate(Entity) returns (Entity);
+service EntityReadAPI {
+    rpc List(Options) returns (stream Entity) {
+        option (google.api.http) = {
+            get: "/schema/entity/v0/inspect"
+        };
+    }
+    rpc Get(Options) returns (Entity) {
+        option (google.api.http) = {
+            get: "/schema/entity/v0/inspect/{name}/{version}"
+        };
+    }
+}
+
+service EntityWriteAPI {
+    rpc Create(Entity) returns (Entity) {
+        option (google.api.http) = {
+            post: "/schema/entity/v0/create"
+            body: "*"
+        };
+    }
+    rpc Update(Entity) returns (Entity) {
+        option (google.api.http) = {
+            put: "/schema/entity/v0/update/{name}/{version}"
+            body: "*"
+        };
+    }
+    rpc Activate(Options) returns (Entity) {
+        option (google.api.http) = {
+            patch: "/schema/entity/v0/activate/{name}/{version}"
+        };
+    }
+    rpc Deactivate(Options) returns (Entity) {
+        option (google.api.http) = {
+            patch: "/schema/entity/v0/deactivate/{name}/{version}"
+        };
+    }
 }

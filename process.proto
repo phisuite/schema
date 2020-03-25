@@ -6,6 +6,7 @@ option java_outer_classname = "ProcessProto";
 
 package schema;
 
+import "google/api/annotations.proto";
 import "common.proto";
 import "event.proto";
 import "entity.proto";
@@ -15,20 +16,53 @@ message Process {
     string version = 2;
     Status status = 3;
 
-    message Payload {
+    Definition definition = 10;
+
+    message Definition {
+        Data input = 1;
+        Data output = 2;
+        Data error = 3;
+    }
+    message Data {
         Event event = 1;
         Entity entity = 2;
     }
-
-    Payload input = 4;
-    Payload output = 5;
-    Event error = 6;
 }
 
-service ProcessAPI {
-    rpc List(Options) returns (stream Process);
-    rpc Get(Options) returns (Process);
-    rpc Create(Process) returns (Process);
-    rpc Update(Process) returns (Process);
-    rpc Deactivate(Process) returns (Process);
+service ProcessReadAPI {
+    rpc List (Options) returns (stream Process) {
+        option (google.api.http) = {
+            get: "/schema/process/v0/inspect"
+        };
+    }
+    rpc Get (Options) returns (Process) {
+        option (google.api.http) = {
+            get: "/schema/process/v0/inspect/{name}/{version}"
+        };
+    }
+}
+
+service ProcessWriteAPI {
+    rpc Create(Process) returns (Process) {
+        option (google.api.http) = {
+            post: "/schema/process/v0/create"
+            body: "*"
+        };
+    }
+    rpc Update(Process) returns (Process) {
+        option (google.api.http) = {
+            put: "/schema/process/v0/update/{name}/{version}"
+            body: "*"
+        };
+    }
+    rpc Activate(Options) returns (Process) {
+        option (google.api.http) = {
+            patch: "/schema/process/v0/activate/{name}/{version}"
+        };
+    }
+    rpc Deactivate(Options) returns (Process) {
+        option (google.api.http) = {
+            patch: "/schema/process/v0/deactivate/{name}/{version}"
+        };
+    }
 }
