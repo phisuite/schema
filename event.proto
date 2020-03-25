@@ -6,22 +6,51 @@ option java_outer_classname = "EventProto";
 
 package schema;
 
+import "google/api/annotations.proto";
 import "common.proto";
 
 message Event {
     string name = 1;
     string version = 2;
     Status status = 3;
-    repeated Field payload = 4;
-    repeated Field options = 5;
-    repeated File files = 6;
+
+    repeated Field payload = 10;
 }
 
-service EventAPI {
-    rpc List(Options) returns (stream Event);
-    rpc Get(Options) returns (Event);
-    rpc Create(Event) returns (Event);
-    rpc Update(Event) returns (Event);
-    rpc Activate(Event) returns (Event);
-    rpc Deactivate(Event) returns (Event);
+service EventReadAPI {
+    rpc List (Options) returns (stream Event) {
+        option (google.api.http) = {
+            get: "/schema/event/v0/inspect"
+        };
+    }
+    rpc Get (Options) returns (Event) {
+        option (google.api.http) = {
+            get: "/schema/event/v0/inspect/{name}/{version}"
+        };
+    }
+}
+
+service EventWriteAPI {
+    rpc Create(Event) returns (Event) {
+        option (google.api.http) = {
+            post: "/schema/event/v0/create"
+            body: "*"
+        };
+    }
+    rpc Update(Event) returns (Event) {
+        option (google.api.http) = {
+            put: "/schema/event/v0/update/{name}/{version}"
+            body: "*"
+        };
+    }
+    rpc Activate(Options) returns (Event) {
+        option (google.api.http) = {
+            patch: "/schema/event/v0/activate/{name}/{version}"
+        };
+    }
+    rpc Deactivate(Options) returns (Event) {
+        option (google.api.http) = {
+            patch: "/schema/event/v0/deactivate/{name}/{version}"
+        };
+    }
 }
