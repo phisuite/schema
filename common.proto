@@ -1,8 +1,9 @@
 syntax = "proto3";
 
-option java_multiple_files = true;
+option go_package = "github.com/phisuite/schema";
 option java_package = "com.phisuite.schema";
 option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
 
 package schema;
 
@@ -16,6 +17,9 @@ message Options {
     string name = 1;
     string version = 2;
     Status status = 3;
+
+    uint32 skip = 10;
+    uint32 limit = 11;
 }
 
 message Field {

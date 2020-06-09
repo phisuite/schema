@@ -1,8 +1,9 @@
 syntax = "proto3";
 
-option java_multiple_files = true;
+option go_package = "github.com/phisuite/schema";
 option java_package = "com.phisuite.schema";
 option java_outer_classname = "EntityProto";
+option java_multiple_files = true;
 
 package schema;
 
